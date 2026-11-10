@@ -1,4 +1,4 @@
--- LA CUMBRE · Datos de ejemplo (ejecútalo DESPUÉS de 01_schema.sql)
+-- YA APLICADO en tu Supabase. Respaldo de los datos de ejemplo (no hace falta volver a ejecutarlo).
 -- Precios, stock y pesos son inventados: cámbialos por los reales del propietario.
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
 

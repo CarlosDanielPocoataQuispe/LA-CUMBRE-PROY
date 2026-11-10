@@ -1,4 +1,4 @@
--- LA CUMBRE · Esquema PostgreSQL (pégalo en Supabase: SQL Editor > New query > Run)
+-- YA APLICADO en tu Supabase. Respaldo del esquema (no hace falta volver a ejecutarlo).
 CREATE TABLE roles (
   id_rol SERIAL PRIMARY KEY,
   nombre VARCHAR(20) UNIQUE NOT NULL            -- usuario, administrador, desarrollador
