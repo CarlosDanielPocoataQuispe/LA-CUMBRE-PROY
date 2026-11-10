@@ -1,0 +1,21 @@
+<%- include('partials/header') %>
+<h1>Catálogo</h1>
+<p>Vendemos solo por mayor: pedido mínimo de <%= minimo %> piezas.</p>
+<% if (mensaje) { %><p class="aviso"><%= mensaje %></p><% } %>
+<div class="grilla">
+<% productos.forEach(p => { %>
+  <div class="tarjeta">
+    <img src="/img/<%= p.imagen %>" alt="<%= p.nombre %>" onerror="this.onerror=null;this.src='/img/sin-imagen.svg'">
+    <h3><%= p.nombre %></h3>
+    <p><%= p.categoria %> · Bs <%= p.precio %> c/u · Stock: <%= p.stock %></p>
+    <% if (usuario && usuario.rol === 'usuario') { %>
+      <form method="post" action="/pedidos">
+        <input type="hidden" name="id_producto" value="<%= p.id_producto %>">
+        <input type="number" name="cantidad" min="<%= minimo %>" value="<%= minimo %>">
+        <button>Pedir</button>
+      </form>
+    <% } else if (!usuario) { %><a href="/login">Ingresa para pedir</a><% } %>
+  </div>
+<% }) %>
+</div>
+<%- include('partials/footer') %>

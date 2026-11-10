@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Cumbre – Genuine Pewter</title><link rel="stylesheet" href="/css/estilos.css"></head><body>
+<header><a class="logo" href="/">La Cumbre</a>
+<nav>
+  <a href="/">Catálogo</a>
+  <% if (usuario) { %>
+    <% if (usuario.rol === 'usuario') { %><a href="/mis-pedidos">Mis pedidos</a><% } %>
+    <% if (usuario.rol === 'administrador' || usuario.rol === 'desarrollador') { %><a href="/admin">Administración</a><% } %>
+    <% if (usuario.rol === 'desarrollador') { %><a href="/dev">Desarrollador</a><% } %>
+    <span class="quien"><%= usuario.nombre %> (<%= usuario.rol %>)</span><a href="/salir">Salir</a>
+  <% } else { %>
+    <a href="/login">Ingresar</a><a href="/registro">Registrarse</a>
+  <% } %>
+</nav></header><main>

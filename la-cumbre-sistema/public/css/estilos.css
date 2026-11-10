@@ -1,0 +1,10 @@
+body{margin:0;font-family:Arial,sans-serif;background:#f6f3ee;color:#23201c}
+header{background:#23201c;color:#fff;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;flex-wrap:wrap}
+header a{color:#e9cf7a;text-decoration:none;margin-left:14px}.logo{font-size:20px;font-weight:bold;margin:0!important}.quien{margin-left:14px;font-size:13px}
+main{max-width:1000px;margin:20px auto;padding:0 16px}footer{text-align:center;color:#777;padding:30px;font-size:13px}
+.grilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.tarjeta{background:#fff;border:1px solid #ddd;border-radius:10px;padding:12px}.tarjeta img{width:100%;height:150px;object-fit:cover;border-radius:6px;background:#eee}
+table{width:100%;border-collapse:collapse;background:#fff;margin-bottom:20px;font-size:14px}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#efe8dc}
+.form{display:grid;gap:10px;max-width:380px}.form label{display:grid;gap:4px}.fila{display:flex;gap:6px;flex-wrap:wrap}
+input,select,button{padding:7px;font-size:14px}button{background:#8a5a2b;color:#fff;border:0;border-radius:6px;cursor:pointer}
+.aviso{background:#e8f3e8;padding:8px;border-radius:6px}.error{background:#fbe4df;padding:8px;border-radius:6px}

@@ -1,0 +1,13 @@
+<%- include('partials/header') %>
+<h1>Crear cuenta</h1>
+<% if (error) { %><p class="error"><%= error %></p><% } %>
+<form method="post" action="/registro" class="form">
+  <label>Nombre completo <input name="nombre" required></label>
+  <label>Correo <input type="email" name="email" required></label>
+  <label>Clave (mínimo 6) <input type="password" name="password" required></label>
+  <label>Teléfono <input name="telefono"></label>
+  <label>País <input name="pais" value="Bolivia"></label>
+  <label>Ciudad / Departamento <input name="ciudad"></label>
+  <button>Registrarme</button>
+</form>
+<%- include('partials/footer') %>

@@ -1,0 +1,9 @@
+<%- include('partials/header') %>
+<h1>Mis pedidos</h1>
+<table><tr><th>N°</th><th>Fecha</th><th>Estado</th><th>Total (Bs)</th><th>Seguimiento</th></tr>
+<% pedidos.forEach(p => { %>
+  <tr><td><%= p.id_pedido %></td><td><%= new Date(p.fecha).toLocaleDateString('es-BO') %></td><td><%= p.estado %></td><td><%= p.total %></td><td><%= p.cod_seguimiento || '-' %></td></tr>
+<% }) %>
+</table>
+<% if (pedidos.length === 0) { %><p>Aún no tienes pedidos.</p><% } %>
+<%- include('partials/footer') %>
