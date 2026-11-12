@@ -1,21 +1,36 @@
-<%- include('partials/header') %>
-<h1>Catálogo</h1>
-<p>Vendemos solo por mayor: pedido mínimo de <%= minimo %> piezas.</p>
-<% if (mensaje) { %><p class="aviso"><%= mensaje %></p><% } %>
-<div class="grilla">
-<% productos.forEach(p => { %>
-  <div class="tarjeta">
-    <img src="/img/<%= p.imagen %>" alt="<%= p.nombre %>" onerror="this.onerror=null;this.src='/img/sin-imagen.svg'">
-    <h3><%= p.nombre %></h3>
-    <p><%= p.categoria %> · Bs <%= p.precio %> c/u · Stock: <%= p.stock %></p>
-    <% if (usuario && usuario.rol === 'usuario') { %>
-      <form method="post" action="/pedidos">
-        <input type="hidden" name="id_producto" value="<%= p.id_producto %>">
-        <input type="number" name="cantidad" min="<%= minimo %>" value="<%= minimo %>">
-        <button>Pedir</button>
-      </form>
-    <% } else if (!usuario) { %><a href="/login">Ingresa para pedir</a><% } %>
+<%- include('partials/header', { titulo: t('catalogo') }) %>
+<section class="hero">
+  <span class="etq">Genuine Pewter · La Paz, Bolivia</span>
+  <h1><%= cfg.banner_titulo %></h1>
+  <p><%= cfg.banner_texto %></p>
+  <p class="nota"><%= t('minimo', cfg.minimo_mayor) %></p>
+  <a class="btn" href="#catalogo"><%= t('ver_todo') %></a>
+</section>
+<section class="franja">
+  <div><b>Horario</b><span><%= cfg.horario %></span></div>
+  <div><b>Envíos</b><span><%= cfg.paises_envio %></span></div>
+  <div><b>Entregas</b><span><%= cfg.entregas %></span></div>
+  <div><b>Materia prima</b><span><%= cfg.materia_prima %></span></div>
+</section>
+<section id="catalogo">
+  <form class="filtros" method="get" action="/#catalogo">
+    <input type="search" name="q" value="<%= q %>" placeholder="<%= t('buscar') %>">
+    <select name="cat"><option value=""><%= t('todas') %></option><% categorias.forEach(c => { %><option <%= c === cat ? 'selected' : '' %>><%= c %></option><% }) %></select>
+    <select name="orden">
+      <% [['nuevos','nuevos'],['az','az'],['menor','menor'],['mayor','mayor']].forEach(o => { %><option value="<%= o[0] %>" <%= orden === o[0] ? 'selected' : '' %>><%= t(o[1]) %></option><% }) %>
+    </select>
+    <button class="btn"><%= t('filtrar') %></button>
+  </form>
+  <div class="chips"><a href="/" class="<%= !cat ? 'on' : '' %>"><%= t('todas') %></a><% categorias.forEach(c => { %><a href="/?cat=<%= encodeURIComponent(c) %>" class="<%= c === cat ? 'on' : '' %>"><%= c %></a><% }) %></div>
+  <% if (!productos.length) { %><p class="vacio"><%= t('sin_resultados') %></p><% } %>
+  <div class="grilla">
+  <% productos.forEach(p => { %>
+    <a class="tarjeta" href="/producto/<%= p.id_producto %>">
+      <div class="foto"><img src="<%= img(p.imagen) %>" alt="<%= p.nombre %>" loading="lazy" onerror="this.onerror=null;this.src='/img/sin-imagen.svg'">
+        <% if (p.stock <= 0) { %><span class="etiqueta rojo"><%= t('agotado') %></span><% } else if (p.stock < 10) { %><span class="etiqueta"><%= t('stock') %>: <%= p.stock %></span><% } %></div>
+      <div class="info"><small><%= p.categoria %></small><h3><%= p.nombre %></h3><div class="precio"><%= bs(p.precio) %></div><span class="ver"><%= t('detalle') %> &rarr;</span></div>
+    </a>
+  <% }) %>
   </div>
-<% }) %>
-</div>
+</section>
 <%- include('partials/footer') %>

@@ -1,0 +1,16 @@
+<%- include('partials/header', { titulo: t('carrito') }) %>
+<h1><%= t('carrito') %></h1>
+<% if (!items.length) { %><section class="panel centro"><p><%= t('vacio') %></p><a class="btn" href="/"><%= t('ver_todo') %></a></section>
+<% } else { %>
+<div class="tabla-wrap"><table>
+<tr><th></th><th><%= t('descripcion') %></th><th><%= t('precio') %></th><th><%= t('cantidad') %></th><th><%= t('subtotal') %></th><th></th></tr>
+<% items.forEach(i => { %><tr>
+  <td><img class="mini" src="<%= img(i.imagen) %>" alt="" onerror="this.onerror=null;this.src='/img/sin-imagen.svg'"></td>
+  <td><a href="/producto/<%= i.id_producto %>"><%= i.nombre %></a></td><td><%= bs(i.precio) %></td>
+  <td><form method="post" action="/carrito/cantidad" class="fila"><input type="hidden" name="id_producto" value="<%= i.id_producto %>"><input type="number" name="cantidad" min="1" value="<%= i.cantidad %>"><button class="btn claro peq"><%= t('actualizar') %></button></form></td>
+  <td><%= bs(i.cantidad * i.precio) %></td>
+  <td><form method="post" action="/carrito/quitar"><input type="hidden" name="id_producto" value="<%= i.id_producto %>"><button class="btn claro peq"><%= t('quitar') %></button></form></td></tr>
+<% }) %></table></div>
+<div class="resumen"><p class="nota"><%= t('minimo', min) %></p><div class="precio grande"><%= t('total') %>: <%= bs(total) %></div><a class="btn" href="/pago"><%= t('pagar') %></a></div>
+<% } %>
+<%- include('partials/footer') %>

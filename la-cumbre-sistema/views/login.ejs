@@ -1,10 +1,10 @@
-<%- include('partials/header') %>
-<h1>Ingresar</h1>
-<% if (mensaje) { %><p class="aviso"><%= mensaje %></p><% } %>
+<%- include('partials/header', { titulo: t('ingresar') }) %>
+<section class="panel estrecho"><h1><%= t('ingresar') %></h1>
 <% if (error) { %><p class="error"><%= error %></p><% } %>
 <form method="post" action="/login" class="form">
-  <label>Correo <input type="email" name="email" required></label>
+  <label>Correo <input type="email" name="email" required autofocus></label>
   <label>Clave <input type="password" name="password" required></label>
-  <button>Entrar</button>
+  <button class="btn"><%= t('ingresar') %></button>
 </form>
+<p class="nota">¿No tienes cuenta? <a href="/registro"><%= t('registro') %></a></p></section>
 <%- include('partials/footer') %>

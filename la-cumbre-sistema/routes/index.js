@@ -5,32 +5,48 @@ const auth = require('../controllers/authController');
 const tienda = require('../controllers/tiendaController');
 const admin = require('../controllers/adminController');
 const dev = require('../controllers/devController');
-
-// Si algo falla dentro de un controlador, mostramos un mensaje en vez de romper la página
 const seguro = (fn) => (req, res) => Promise.resolve(fn(req, res)).catch((e) => {
   console.error(e);
   res.status(500).render('mensaje', { titulo: 'Error', texto: 'Ocurrió un problema. Intenta de nuevo.' });
 });
 
-router.get('/', seguro(tienda.inicio));
+// Públicas
+router.get('/', seguro(tienda.catalogo));
+router.get('/producto/:id', seguro(tienda.detalle));
+router.get('/idioma/:cod', auth.idioma);
 router.get('/login', auth.formLogin);
 router.post('/login', seguro(auth.login));
 router.get('/registro', auth.formRegistro);
 router.post('/registro', seguro(auth.registro));
 router.get('/salir', auth.salir);
 
-// Rol: usuario
-router.post('/pedidos', soloRol('usuario'), seguro(tienda.pedir));
-router.get('/mis-pedidos', soloRol('usuario'), seguro(tienda.misPedidos));
+// Rol usuario (cliente)
+const cliente = soloRol('usuario');
+router.post('/carrito/agregar', cliente, seguro(tienda.agregar));
+router.get('/carrito', cliente, seguro(tienda.verCarrito));
+router.post('/carrito/cantidad', cliente, seguro(tienda.cambiarCantidad));
+router.post('/carrito/quitar', cliente, seguro(tienda.quitar));
+router.get('/pago', cliente, seguro(tienda.formPago));
+router.post('/pago', cliente, seguro(tienda.pagar));
+router.get('/mis-pedidos', cliente, seguro(tienda.misPedidos));
 
-// Rol: administrador (el desarrollador también puede entrar)
+// Rol administrador (el desarrollador también entra)
 const admins = soloRol('administrador', 'desarrollador');
-router.get('/admin', admins, seguro(admin.panel));
-router.post('/admin/estado', admins, seguro(admin.cambiarEstado));
-router.post('/admin/producto', admins, seguro(admin.crearProducto));
+router.get('/admin', admins, (req, res) => res.redirect('/admin/resumen'));
+router.get('/admin/:sec', admins, seguro(admin.panel));
+router.post('/admin/estado', admins, seguro(admin.estado));
+router.post('/admin/producto', admins, seguro(admin.guardarProducto));
+router.post('/admin/producto/visibilidad', admins, seguro(admin.alternarProducto));
+router.post('/admin/envio', admins, seguro(admin.envio));
+router.post('/admin/metal', admins, seguro(admin.metal));
+router.post('/admin/diseno', admins, seguro(admin.diseno));
 
-// Rol: desarrollador
-router.get('/dev', soloRol('desarrollador'), seguro(dev.panel));
-router.post('/dev/rol', soloRol('desarrollador'), seguro(dev.cambiarRol));
+// Rol desarrollador
+const devs = soloRol('desarrollador');
+router.get('/dev', devs, (req, res) => res.redirect('/dev/consola'));
+router.get('/dev/diagrama/:nombre', devs, dev.diagrama);
+router.post('/dev/sql', devs, seguro(dev.sql));
+router.post('/dev/rol', devs, seguro(dev.rol));
+router.get('/dev/:sec', devs, seguro(dev.panel));
 
 module.exports = router;

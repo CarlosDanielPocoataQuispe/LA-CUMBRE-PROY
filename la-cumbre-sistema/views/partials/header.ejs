@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>La Cumbre – Genuine Pewter</title><link rel="stylesheet" href="/css/estilos.css"></head><body>
-<header><a class="logo" href="/">La Cumbre</a>
-<nav>
-  <a href="/">Catálogo</a>
-  <% if (usuario) { %>
-    <% if (usuario.rol === 'usuario') { %><a href="/mis-pedidos">Mis pedidos</a><% } %>
-    <% if (usuario.rol === 'administrador' || usuario.rol === 'desarrollador') { %><a href="/admin">Administración</a><% } %>
-    <% if (usuario.rol === 'desarrollador') { %><a href="/dev">Desarrollador</a><% } %>
-    <span class="quien"><%= usuario.nombre %> (<%= usuario.rol %>)</span><a href="/salir">Salir</a>
-  <% } else { %>
-    <a href="/login">Ingresar</a><a href="/registro">Registrarse</a>
-  <% } %>
-</nav></header><main>
+<html lang="<%= lang %>"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= typeof titulo !== 'undefined' ? titulo + ' | ' : '' %><%= cfg.nombre_tienda %></title>
+<link rel="stylesheet" href="/css/estilos.css">
+<style>:root{--c:<%= /^#[0-9a-fA-F]{6}$/.test(cfg.color_principal || '') ? cfg.color_principal : '#c9a24b' %>}</style></head><body>
+<header class="top"><div class="wrap bar">
+  <a class="logo" href="/"><%= cfg.nombre_tienda %></a>
+  <nav>
+    <a href="/"><%= t('catalogo') %></a>
+    <% if (usuario && usuario.rol === 'usuario') { %><a href="/carrito"><%= t('carrito') %> (<%= nCarrito %>)</a><a href="/mis-pedidos"><%= t('pedidos') %></a><% } %>
+    <% if (usuario && (usuario.rol === 'administrador' || usuario.rol === 'desarrollador')) { %><a href="/admin"><%= t('admin') %></a><% } %>
+    <% if (usuario && usuario.rol === 'desarrollador') { %><a href="/dev"><%= t('dev') %></a><% } %>
+    <% if (usuario) { %><span class="quien"><%= usuario.nombre.split(' (')[0] %> · <%= usuario.rol %></span><a href="/salir"><%= t('salir') %></a>
+    <% } else { %><a href="/login"><%= t('ingresar') %></a><a class="btn peq" href="/registro"><%= t('registro') %></a><% } %>
+    <span class="lang"><a href="/idioma/es" class="<%= lang === 'es' ? 'on' : '' %>">ES</a><a href="/idioma/en" class="<%= lang === 'en' ? 'on' : '' %>">EN</a></span>
+  </nav></div></header>
+<main class="wrap">
+<% if (msg) { %><div class="aviso"><%= msg %></div><% } %>

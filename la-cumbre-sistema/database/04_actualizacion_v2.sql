@@ -1,0 +1,3 @@
+-- YA APLICADO en tu Supabase (respaldo). Cambios de la versión 2:
+-- columnas nuevas en productos/pedidos/envios, tablas carrito y configuracion, productos nuevos y claves nuevas.
+-- Consulta el historial en Supabase > Database > Migrations (v2_tienda_carrito_config).

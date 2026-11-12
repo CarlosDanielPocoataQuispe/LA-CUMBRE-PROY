@@ -1,15 +1,31 @@
-<%- include('partials/header') %>
-<h1>Panel del desarrollador</h1>
-<% if (mensaje) { %><p class="aviso"><%= mensaje %></p><% } %>
-<p>Conexión con la base de datos: correcta. Hora del servidor de base de datos: <%= new Date(hora).toLocaleString('es-BO') %></p>
-<h2>Usuarios y roles</h2>
-<table><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Rol</th></tr>
-<% usuarios.forEach(u => { %>
-  <tr><td><%= u.id_usuario %></td><td><%= u.nombre %></td><td><%= u.email %></td>
-  <td><form method="post" action="/dev/rol" class="fila">
-    <input type="hidden" name="id_usuario" value="<%= u.id_usuario %>">
-    <select name="id_rol"><% roles.forEach(r => { %><option value="<%= r.id_rol %>" <%= r.id_rol === u.id_rol ? 'selected' : '' %>><%= r.nombre %></option><% }) %></select>
-    <button>Guardar</button></form></td></tr>
-<% }) %>
-</table>
+<%- include('partials/header', { titulo: t('dev') }) %>
+<h1><%= t('dev') %></h1>
+<nav class="pestanas"><% [['consola','Consola de base de datos'],['usuarios','Usuarios y roles'],['diagramas','Diagramas del sistema']].forEach(s => { %><a href="/dev/<%= s[0] %>" class="<%= sec === s[0] ? 'on' : '' %>"><%= s[1] %></a><% }) %></nav>
+
+<% if (sec === 'consola') { %>
+<div class="kpis"><div><b>Conectada</b><span>Base de datos PostgreSQL</span></div><div><b><%= new Date(hora).toLocaleTimeString('es-BO') %></b><span>Hora de la base</span></div><div><b><%= sistema.node %></b><span>Node.js</span></div><div><b><%= sistema.entorno %></b><span>Entorno (activo <%= sistema.activo %>)</span></div></div>
+<div class="dos">
+  <div class="panel"><h2>Tablas</h2><table><tr><th>Tabla</th><th>Filas</th></tr><% tablas.forEach(x => { %><tr><td><a href="/dev/consola?t=<%= x.tabla %>"><%= x.tabla %></a></td><td><%= x.filas %></td></tr><% }) %></table></div>
+  <form method="post" action="/dev/sql" class="form panel">
+    <h2>Consola SQL</h2>
+    <textarea name="sql" rows="7" class="codigo" placeholder="SELECT * FROM productos LIMIT 10;"><%= sql %></textarea>
+    <label class="fila"><input type="checkbox" name="permitir"> Permitir cambios (INSERT, UPDATE, DELETE, CREATE…)</label>
+    <button class="btn">Ejecutar</button>
+  </form>
+</div>
+<% if (out) { %><section class="panel"><% if (out.error) { %><p class="error"><%= out.error %></p><% } else { %><p class="aviso"><%= out.filas %> fila(s) afectadas o devueltas<%= out.rows.length === 200 ? ' (se muestran 200)' : '' %></p>
+<% if (out.campos.length) { %><div class="tabla-wrap"><table><tr><% out.campos.forEach(c => { %><th><%= c %></th><% }) %></tr>
+<% out.rows.forEach(r => { %><tr><% out.campos.forEach(c => { %><td><%= r[c] === null ? 'NULL' : (typeof r[c] === 'object' ? JSON.stringify(r[c]) : String(r[c]).slice(0, 80)) %></td><% }) %></tr><% }) %></table></div><% } %><% } %></section><% } %>
+<% } %>
+
+<% if (sec === 'usuarios') { %><div class="tabla-wrap"><table><tr><th>N°</th><th>Nombre</th><th>Correo</th><th>Rol</th></tr>
+<% usuarios.forEach(u => { %><tr><td><%= u.id_usuario %></td><td><%= u.nombre %></td><td><%= u.email %></td>
+<td><form method="post" action="/dev/rol" class="fila"><input type="hidden" name="id_usuario" value="<%= u.id_usuario %>"><select name="id_rol"><% roles.forEach(r => { %><option value="<%= r.id_rol %>" <%= r.id_rol === u.id_rol ? 'selected' : '' %>><%= r.nombre %></option><% }) %></select><button class="btn peq">Guardar</button></form></td></tr><% }) %></table></div><% } %>
+
+<% if (sec === 'diagramas') { %>
+<p class="nota">Estos diagramas explican cómo funciona el sistema. Solo el rol desarrollador puede verlos.</p>
+<% DIAGRAMAS.forEach(d => { %><section class="panel"><h2><%= d[1] %></h2><div class="tabla-wrap"><a href="/dev/diagrama/<%= d[0] %>.svg" target="_blank"><img class="diag" src="/dev/diagrama/<%= d[0] %>.svg" alt="<%= d[1] %>"></a></div>
+<% if (d[0] === 'clases') { %><h3>Relaciones del diagrama de clases</h3><div class="tabla-wrap"><table><tr><th>Origen</th><th>Relación</th><th>Destino</th><th>Mult.</th><th>Rol</th></tr>
+<% relaciones.forEach(r => { %><tr><td><%= r[0] %></td><td><%= r[1] %></td><td><%= r[2] %></td><td><%= r[3] %></td><td><%= r[4] %></td></tr><% }) %></table></div><% } %></section><% }) %>
+<% } %>
 <%- include('partials/footer') %>

@@ -1,0 +1,21 @@
+<%- include('partials/header', { titulo: t('confirmar') }) %>
+<h1><%= t('confirmar') %></h1>
+<% if (!items.length) { %><section class="panel centro"><p><%= t('vacio') %></p><a class="btn" href="/"><%= t('volver') %></a></section>
+<% } else { %>
+<div class="dos">
+  <div class="tabla-wrap"><table><tr><th><%= t('descripcion') %></th><th><%= t('cantidad') %></th><th><%= t('subtotal') %></th></tr>
+  <% items.forEach(i => { %><tr><td><%= i.nombre %></td><td><%= i.cantidad %></td><td><%= bs(i.cantidad * i.precio) %></td></tr><% }) %>
+  <tr><th colspan="2"><%= t('total') %></th><th><%= bs(total) %></th></tr></table>
+  <p class="nota"><%= t('minimo', min) %></p></div>
+  <form method="post" action="/pago" class="form panel">
+    <% if (directo) { %><input type="hidden" name="directo" value="1"><input type="hidden" name="id_producto" value="<%= idp %>"><input type="hidden" name="cantidad" value="<%= items[0].cantidad %>"><% } %>
+    <label><%= t('pago') %>
+      <select name="metodo"><option>QR</option><option>Transferencia bancaria</option><option>Efectivo contra entrega</option></select></label>
+    <label><%= t('direccion') %> (departamento / país)
+      <textarea name="direccion" rows="3" required><%= u.ciudad || '' %>, <%= u.pais || '' %></textarea></label>
+    <p class="nota">El pago es simulado en este proyecto académico: el pedido queda registrado para su confirmación.</p>
+    <button class="btn"><%= t('confirmar') %></button>
+  </form>
+</div>
+<% } %>
+<%- include('partials/footer') %>

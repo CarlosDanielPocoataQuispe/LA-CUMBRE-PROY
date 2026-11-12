@@ -1,0 +1,36 @@
+<%- include('partials/header', { titulo: p.nombre }) %>
+<p class="migas"><a href="/"><%= t('catalogo') %></a> / <a href="/?cat=<%= encodeURIComponent(p.categoria || '') %>"><%= p.categoria %></a> / <%= p.nombre %></p>
+<section class="detalle">
+  <div class="galeria"><img src="<%= img(p.imagen) %>" alt="<%= p.nombre %>" onerror="this.onerror=null;this.src='/img/sin-imagen.svg'"></div>
+  <div class="datos">
+    <small class="etq"><%= p.categoria %></small>
+    <h1><%= p.nombre %></h1>
+    <div class="precio grande"><%= bs(p.precio) %> <small>c/u</small></div>
+    <p><%= p.descripcion %></p>
+    <table class="ficha">
+      <tr><th><%= t('material') %></th><td><%= p.material %></td></tr>
+      <% if (p.medidas) { %><tr><th><%= t('medidas') %></th><td><%= p.medidas %></td></tr><% } %>
+      <tr><th><%= t('stock') %></th><td><%= p.stock > 0 ? p.stock + ' ' + t('unidades') : t('agotado') %></td></tr>
+      <tr><th><%= t('categoria') %></th><td><%= p.categoria %></td></tr>
+    </table>
+    <p class="nota"><%= t('minimo', cfg.minimo_mayor) %></p>
+    <p class="nota">Envíos: <%= cfg.paises_envio %>. <%= cfg.entregas %>.</p>
+    <% if (usuario && usuario.rol === 'usuario') { %>
+      <% if (p.stock > 0) { %>
+      <form method="post" action="/carrito/agregar" class="fila">
+        <input type="hidden" name="id_producto" value="<%= p.id_producto %>">
+        <input type="number" name="cantidad" min="1" max="<%= p.stock %>" value="<%= cfg.minimo_mayor %>">
+        <button class="btn"><%= t('agregar') %></button>
+        <button class="btn claro" formmethod="get" formaction="/pago" name="directo" value="1"><%= t('comprar') %></button>
+      </form><% } %>
+    <% } else if (!usuario) { %><a class="btn" href="/login"><%= t('iniciar_para') %></a>
+    <% } else { %><p class="nota">Las cuentas de <%= usuario.rol %> no realizan compras.</p><% } %>
+  </div>
+</section>
+<% if (relacionados.length) { %>
+<h2><%= t('relacionados') %></h2>
+<div class="grilla"><% relacionados.forEach(r => { %>
+  <a class="tarjeta" href="/producto/<%= r.id_producto %>"><div class="foto"><img src="<%= img(r.imagen) %>" alt="<%= r.nombre %>" loading="lazy" onerror="this.onerror=null;this.src='/img/sin-imagen.svg'"></div>
+  <div class="info"><h3><%= r.nombre %></h3><div class="precio"><%= bs(r.precio) %></div></div></a>
+<% }) %></div><% } %>
+<%- include('partials/footer') %>

@@ -1,9 +1,7 @@
-<%- include('partials/header') %>
-<h1>Mis pedidos</h1>
-<table><tr><th>N°</th><th>Fecha</th><th>Estado</th><th>Total (Bs)</th><th>Seguimiento</th></tr>
-<% pedidos.forEach(p => { %>
-  <tr><td><%= p.id_pedido %></td><td><%= new Date(p.fecha).toLocaleDateString('es-BO') %></td><td><%= p.estado %></td><td><%= p.total %></td><td><%= p.cod_seguimiento || '-' %></td></tr>
-<% }) %>
-</table>
-<% if (pedidos.length === 0) { %><p>Aún no tienes pedidos.</p><% } %>
+<%- include('partials/header', { titulo: t('pedidos') }) %>
+<h1><%= t('pedidos') %></h1>
+<% if (!pedidos.length) { %><p class="vacio">Aún no tienes pedidos.</p><% } else { %>
+<div class="tabla-wrap"><table><tr><th>N°</th><th>Fecha</th><th>Estado</th><th>Pago</th><th><%= t('total') %></th><th>Seguimiento</th></tr>
+<% pedidos.forEach(p => { %><tr><td><%= p.id_pedido %></td><td><%= new Date(p.fecha).toLocaleDateString(lang === 'en' ? 'en-US' : 'es-BO') %></td><td><span class="estado"><%= p.estado %></span></td><td><%= p.metodo_pago %></td><td><%= bs(p.total) %></td><td><%= p.cod_seguimiento ? p.cod_seguimiento + ' (' + p.estado_envio + ')' : '-' %></td></tr><% }) %>
+</table></div><% } %>
 <%- include('partials/footer') %>

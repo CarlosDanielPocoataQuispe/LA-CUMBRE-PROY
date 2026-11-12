@@ -1,5 +1,5 @@
-<%- include('partials/header') %>
-<h1>Crear cuenta</h1>
+<%- include('partials/header', { titulo: t('registro') }) %>
+<section class="panel estrecho"><h1><%= t('registro') %></h1>
 <% if (error) { %><p class="error"><%= error %></p><% } %>
 <form method="post" action="/registro" class="form">
   <label>Nombre completo <input name="nombre" required></label>
@@ -7,7 +7,7 @@
   <label>Clave (mínimo 6) <input type="password" name="password" required></label>
   <label>Teléfono <input name="telefono"></label>
   <label>País <input name="pais" value="Bolivia"></label>
-  <label>Ciudad / Departamento <input name="ciudad"></label>
-  <button>Registrarme</button>
-</form>
+  <label>Departamento / ciudad <input name="ciudad"></label>
+  <button class="btn"><%= t('registro') %></button>
+</form></section>
 <%- include('partials/footer') %>
