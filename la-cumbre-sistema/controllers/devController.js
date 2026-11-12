@@ -3,12 +3,17 @@ const path = require('path');
 const db = require('../config/db');
 const Usuario = require('../models/usuario');
 const relaciones = require('../private/diagramas/relaciones.json');
-const DIAGRAMAS = [['clases', 'Diagrama de clases'], 
-                   ['casos_uso', 'Casos de uso por rol'], 
-                   ['mer', 'Modelo entidad-relación'], 
-                   //['secuencia_compra', 'Secuencia: compra desde el carrito'], 
-                   ['estados_pedido', 'Estados del pedido'], 
-                   //['arquitectura', 'Arquitectura MVC y despliegue']];
+// Lista de diagramas que ve el desarrollador. Para ocultar uno, pon // al inicio de su línea.
+const DIAGRAMAS = [
+  ['dfd_contexto', 'Diagrama de contexto (DFD nivel 0)'],
+  ['dfd_nivel1', 'DFD nivel 1'],
+  ['clases', 'Diagrama de clases'],
+  ['casos_uso', 'Casos de uso por rol'],
+  ['mer', 'Modelo entidad-relación'],
+  // ['secuencia_compra', 'Secuencia: compra desde el carrito'],
+  ['estados_pedido', 'Estados del pedido'],
+  // ['arquitectura', 'Arquitectura MVC y despliegue'],
+];
 const tablas = async () => (await db.query('SELECT relname AS tabla, n_live_tup AS filas FROM pg_stat_user_tables ORDER BY relname')).rows;
 
 exports.panel = async (req, res) => {
